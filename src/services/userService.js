@@ -17,9 +17,6 @@ const createUserService = async (name, email, password) =>
             return { success: false, message: "User already exists" };
         }
 
-        // Hash user password by bcrypt
-        const bcrypt = require("bcrypt");
-
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Create new user
@@ -46,6 +43,14 @@ const loginService = async (email, password) =>
     try 
     {
         const user = await User.findOne({ email: email });
+        if (!user)
+        {
+            console.log("User not found with email:", email);
+            return { 
+                EC: 1,
+                EM: "User not found"
+            };
+        }
         const isMatchPassword = await bcrypt.compare(password, user.password);
         if (user)
         {
