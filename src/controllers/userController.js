@@ -25,4 +25,5 @@ module.exports = {
     createUser, 
     handleLogin, 
     getUser, 
-    getAccount };
+    getAccount 
+};
