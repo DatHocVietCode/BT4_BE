@@ -30,4 +30,4 @@ router.get("/get-user", getUser);
 router.get("/account", delay, getAccount);
 
 
-module.exports = router;    
+module.exports = router;

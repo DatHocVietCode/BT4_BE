@@ -5,7 +5,11 @@ const productSchema = new mongoose.Schema({
   description: String,
   category: String,
   stock: { type: Number, default: 0 },
-  imageUrl: String
+  imageUrl: String,
+
+    // Thêm các field cần filter theo DTO
+  discount: { type: Number, default: 0 }, // % khuyến mãi
+  views: { type: Number, default: 0 }     // số lượt xem
 }, { timestamps: true });
 
 

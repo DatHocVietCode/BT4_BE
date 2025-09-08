@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const Product = require('../models/product.js');
-
+const ProductSearchUtils = require('../utils/search.utils.js');
+const { search } = ProductSearchUtils;
 dotenv.config();
 
 const createProductService = async (productData) => {
@@ -38,28 +39,73 @@ const getProductByIdService = async (productId) => {
     }
 };
 
-const getProductPerPageService = async (page = 1, limit = 5) => {
+// const getProductPerPageService = async (page = 1, limit = 5) => {
+//     try {
+//         const skip = (page - 1) * limit;
+//         const products = await Product.find().skip(skip).limit(limit).lean();
+//         const totalProducts = await Product.countDocuments();
+//         return {
+//             success: true,
+//             data: products,
+//             pagination: {
+//                 currentPage: page,
+//                 totalPages: Math.ceil(totalProducts / limit),
+//                 totalProducts
+//             }
+//         };
+//     } catch (error) {
+//         console.error("Error fetching products:", error);
+//         return { success: false, message: "Error fetching products" };
+//     }
+// };
+
+// const filterProductsService = async (products, dto) => {
+//     try {
+//         const filteredProducts = search(products, dto);
+//         return { success: true, data: filteredProducts };
+//     } catch (error) {
+//         console.error("Error filtering products:", error);
+//         return { success: false, message: "Error filtering products" };
+//     }
+// }
+
+
+const getFilteredProductsService = async (dto) => {
     try {
-        const skip = (page - 1) * limit;
-        const products = await Product.find().skip(skip).limit(limit).lean();
-        const totalProducts = await Product.countDocuments();
-        return {
-            success: true,
-            data: products,
-            pagination: {
-                currentPage: page,
-                totalPages: Math.ceil(totalProducts / limit),
-                totalProducts
-            }
-        };
+        // 1. Lấy tất cả sản phẩm
+        const allProducts = await Product.find().lean();
+
+        // 2. Fuzzy search + filter
+        const filteredProducts = ProductSearchUtils.search(allProducts, dto);
+
+        return filteredProducts;
     } catch (error) {
-        console.error("Error fetching products:", error);
-        return { success: false, message: "Error fetching products" };
+        console.error("Error filtering products:", error);
+        return [];
     }
 };
 
+const paginateProducts = (products, page = 1, limit = 5) => {
+    const totalProducts = products.length;
+    const totalPages = Math.ceil(totalProducts / limit);
+    const start = (page - 1) * limit;
+    const paginatedProducts = products.slice(start, start + limit);
+
+    return {
+        success: true,
+        data: paginatedProducts,
+        pagination: {
+            currentPage: page,
+            totalPages,
+            totalProducts
+        }
+    };
+};
 module.exports = {
     createProductService,
     getProductByIdService,
-    getProductPerPageService
+    // getProductPerPageService,
+    // filterProductsService
+    getFilteredProductsService,
+    paginateProducts
 };

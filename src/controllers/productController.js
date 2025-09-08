@@ -1,4 +1,6 @@
-const { createProductService, getProductByIdService, getProductPerPageService} = require("../services/productService");
+const { createProductService, getProductByIdService, getProductPerPageService, filterProductsService,
+    getFilteredProductsService, paginateProducts
+} = require("../services/productService");
 
 class ProductController {
     static async createProduct(req, res) {
@@ -20,16 +22,23 @@ class ProductController {
             return res.status(404).json(result);
         }
     }
-
     static async getProductsPerPage(req, res) {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
-        const result = await getProductPerPageService(page, limit);
-        if (result.success) {
+
+        try {
+            // 1. Filter sản phẩm theo DTO từ query
+            const filteredProducts = await getFilteredProductsService(req.query);
+
+            // 2. Phân trang
+            const result = paginateProducts(filteredProducts, page, limit);
+
             return res.status(200).json(result);
-        } else {
-            return res.status(500).json(result);
+        } catch (error) {
+            console.error("Error in getProductsPerPage:", error);
+            return res.status(500).json({ success: false, message: "Error fetching products" });
         }
     }
+
 }
 module.exports = ProductController;
