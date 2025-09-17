@@ -1,6 +1,6 @@
 const express = require('express');
 const { createUser, handleLogin, getUser,
-    getAccount, addViewedProductController }
+    getAccount, addViewedProductController, toggleFav }
     = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
@@ -29,5 +29,5 @@ router.use(auth);
 router.get("/get-user", getUser);
 router.get("/account", delay, getAccount);
 router.patch("/users/viewed/:productId", addViewedProductController);
-
+router.post("/users/fav/:id", toggleFav);
 module.exports = router;

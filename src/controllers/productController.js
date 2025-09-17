@@ -48,6 +48,17 @@ class ProductController {
         res.status(400).json({ error: err.message });
     }
     };
-    
+    static async toggleFav(req, res) {
+        try {
+            const { email } = req.body;       // lấy email từ body request
+            const { id: productId } = req.params; // lấy productId từ URL
+
+            const user = await toggleFavProduct(email, productId);
+            res.json(user);
+        } catch (err) {
+            res.status(400).json({ error: err.message });
+        }
+        }
+
 }
 module.exports = ProductController;

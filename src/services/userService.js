@@ -128,4 +128,22 @@ const addViewedProduct = async (userEmail, productId) => {
 
     return user.viewedProduct;
 };
-module.exports = { createUserService, loginService, getUserSevice, addViewedProduct };
+const toggleFavProduct = async (email, productId) => {
+  const user = await User.findOne({ email });
+  if (!user) throw new Error("User not found");
+
+  const index = user.favProduct.indexOf(productId);
+
+  if (index === -1) {
+    // chưa có thì thêm
+    user.favProduct.push(productId);
+  } else {
+    // có rồi thì bỏ
+    user.favProduct.splice(index, 1);
+  }
+
+  await user.save();
+  return user;
+};
+
+module.exports = { createUserService, loginService, getUserSevice, addViewedProduct, toggleFavProduct };
