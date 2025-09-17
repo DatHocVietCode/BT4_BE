@@ -21,7 +21,7 @@ static search(products, dto = {}) {
     } = dto;
 
     let results = products;
-
+    
     // 1. Fuzzy search với Fuse.js nếu có keyword
     if (keyword) {
       const fuse = new Fuse(products, { keys: ["name"], threshold: 0.3 });

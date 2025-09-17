@@ -9,7 +9,8 @@ const productSchema = new mongoose.Schema({
 
     // Thêm các field cần filter theo DTO
   discount: { type: Number, default: 0 }, // % khuyến mãi
-  views: { type: Number, default: 0 }     // số lượt xem
+  views: { type: Number, default: 0 },
+  bought: { type: Number, default: 0}     // số lượt xem
 }, { timestamps: true });
 
 

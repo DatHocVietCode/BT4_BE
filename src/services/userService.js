@@ -115,5 +115,17 @@ const getUserSevice = async () =>
         return null;
     }
 }
+const addViewedProduct = async (userEmail, productId) => {
+    // Tìm user
+    const user = await User.findOne({email: userEmail});
+    if (!user) throw new Error("User not found");
 
-module.exports = { createUserService, loginService, getUserSevice };
+    // Nếu chưa có thì mới push vào mảng
+    if (!user.viewedProduct.includes(productId)) {
+        user.viewedProduct.push(productId);
+        await user.save();
+    }
+
+    return user.viewedProduct;
+};
+module.exports = { createUserService, loginService, getUserSevice, addViewedProduct };

@@ -3,10 +3,13 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
-    const white_lists = ["/", "/register", "/login"];
-    const path = req.originalUrl.replace(/\/+$/, ""); // remove trailing slash
+    const white_lists = ["/", "/register", "/login", "/products"];
 
-    if (white_lists.some(item => '/v1/api' + item === path)) {
+    // req.path đã bỏ query string, chỉ còn pathname
+    const path = req.path.replace(/\/+$/, ""); // bỏ trailing slash
+
+    console.log(">>> Check auth for path:", path);
+    if (white_lists.includes(path)) {
         return next();
     }
 
@@ -26,7 +29,5 @@ const auth = (req, res, next) => {
         return res.status(401).json({ message: "Invalid token" });
     }
 };
-
-
 
 module.exports = auth;

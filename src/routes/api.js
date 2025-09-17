@@ -1,17 +1,17 @@
 const express = require('express');
 const { createUser, handleLogin, getUser,
-    getAccount }
+    getAccount, addViewedProductController }
     = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
-const { createProduct, getProductById, getProductsPerPage } = require("../controllers/productController");
+const { createProduct, getProductById, getProductsPerPage, increaseView } = require("../controllers/productController");
 
 const router = express.Router();
 
 router.post("/create-products", createProduct);
 router.get("/products/:id", getProductById);
 router.get("/products", getProductsPerPage);
-
+router.patch("/products/:id/increase-view", increaseView); // tăng view cho product
 
 
 router.get("/", (req, res) => {
@@ -28,6 +28,6 @@ router.post("/login", handleLogin);
 router.use(auth);
 router.get("/get-user", getUser);
 router.get("/account", delay, getAccount);
-
+router.patch("/users/viewed/:productId", addViewedProductController);
 
 module.exports = router;

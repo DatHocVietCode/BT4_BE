@@ -1,4 +1,4 @@
-const { createUserService, loginService, getUserService } = require('../services/userService'); require('../services/userService');
+const { createUserService, loginService, getUserService, addViewedProduct } = require('../services/userService'); require('../services/userService');
 
 const createUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -20,10 +20,26 @@ const getUser = async (req, res) => {
 const getAccount = async (req, res) => {
     return res.status(200).json(req.user);
 }
+const addViewedProductController = async (req, res) => {
+        try {
+            const userEmail = req.user0.email;
+            console.log(userEmail)
+            const { productId } = req.params;
 
+            const viewedProducts = await addViewedProduct(userEmail, productId);
+
+            res.status(200).json({
+                message: "Viewed product updated successfully",
+                viewedProducts
+            });
+        } catch (err) {
+            res.status(400).json({ error: err.message });
+        }
+    };
 module.exports = { 
     createUser, 
     handleLogin, 
     getUser, 
-    getAccount 
+    getAccount ,
+    addViewedProductController
 };

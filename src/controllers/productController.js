@@ -1,5 +1,6 @@
 const { createProductService, getProductByIdService, getProductPerPageService, filterProductsService,
-    getFilteredProductsService, paginateProducts
+    getFilteredProductsService, paginateProducts, 
+    increaseProductView
 } = require("../services/productService");
 
 class ProductController {
@@ -39,6 +40,14 @@ class ProductController {
             return res.status(500).json({ success: false, message: "Error fetching products" });
         }
     }
-
+    static async increaseView(req, res) {
+    try {
+        const product = await increaseProductView(req.params.id);
+        res.json(product);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+    };
+    
 }
 module.exports = ProductController;

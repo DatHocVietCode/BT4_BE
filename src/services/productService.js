@@ -101,11 +101,25 @@ const paginateProducts = (products, page = 1, limit = 5) => {
         }
     };
 };
+
+const increaseProductView = async (productId) => {
+  const product = await Product.findByIdAndUpdate(
+    productId,
+    { $inc: { views: 1 } },
+    { new: true } // trả về document đã update
+  );
+  if (!product) {
+    throw new Error("Product not found");
+  }
+  return product;
+};
+
 module.exports = {
     createProductService,
     getProductByIdService,
     // getProductPerPageService,
     // filterProductsService
     getFilteredProductsService,
-    paginateProducts
+    paginateProducts,
+    increaseProductView
 };
