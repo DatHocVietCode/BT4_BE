@@ -1,6 +1,6 @@
 const { createProductService, getProductByIdService, getProductPerPageService, filterProductsService,
     getFilteredProductsService, paginateProducts, 
-    increaseProductView
+    increaseProductView, getRelatedProducts
 } = require("../services/productService");
 
 class ProductController {
@@ -58,7 +58,16 @@ class ProductController {
         } catch (err) {
             res.status(400).json({ error: err.message });
         }
+    }
+    static async related(req, res) {
+        try {
+            const { id } = req.params;
+            const products = await getRelatedProducts(id);
+            res.json(products);
+        } catch (err) {
+            res.status(400).json({ error: err.message });
         }
+    }
 
 }
 module.exports = ProductController;

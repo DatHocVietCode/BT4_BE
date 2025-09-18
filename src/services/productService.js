@@ -113,6 +113,18 @@ const increaseProductView = async (productId) => {
   }
   return product;
 };
+const getRelatedProducts = async (productId) => {
+  const product = await Product.findById(productId);
+  if (!product) throw new Error("Product not found");
+
+  // Lấy sản phẩm khác cùng category
+  const related = await Product.find({
+    category: product.category,
+    _id: { $ne: product._id } // loại trừ chính nó
+  }).limit(10); // giới hạn số lượng
+
+  return related;
+};
 
 module.exports = {
     createProductService,
@@ -121,5 +133,6 @@ module.exports = {
     // filterProductsService
     getFilteredProductsService,
     paginateProducts,
-    increaseProductView
+    increaseProductView,
+    getRelatedProducts
 };

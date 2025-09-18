@@ -4,15 +4,21 @@ const { createUser, handleLogin, getUser,
     = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
-const { createProduct, getProductById, getProductsPerPage, increaseView } = require("../controllers/productController");
-
+const { createProduct, getProductById, getProductsPerPage, increaseView, related } = require("../controllers/productController");
+const commentController = require("../controllers/commentController");
 const router = express.Router();
+
+// GET /comments/stats/:productId
+router.get("/comments/stats/:productId", commentController.getCommentStats);
+
+// GET /comments/:productId
+router.get("/comments/:productId", commentController.getComments);
 
 router.post("/create-products", createProduct);
 router.get("/products/:id", getProductById);
 router.get("/products", getProductsPerPage);
 router.patch("/products/:id/increase-view", increaseView); // tăng view cho product
-
+router.get("/products/:id/related", related);
 
 router.get("/", (req, res) => {
     res.status(200).json({

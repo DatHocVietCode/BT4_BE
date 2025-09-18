@@ -1,0 +1,18 @@
+[
+  {
+    "_id": { "$oid": "68cae6c54544d04b991a2e00" },
+    "product": { "$oid": "68be366cb8854209b3281195" },
+    "user": { "$oid": "68cad6b04544d04b991a2d4c" },
+    "content": "Chuột xài mượt, click êm 👍",
+    "createdAt": { "$date": "2025-09-17T14:30:00.000Z" },
+    "updatedAt": { "$date": "2025-09-17T14:30:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "68cae6c54544d04b991a2e01" },
+    "product": { "$oid": "68be366cb8854209b3281195" },
+    "user": { "$oid": "68cad6c54544d04b991a2d4f" },
+    "content": "Pin hơi yếu so với mong đợi, nhưng giá ổn.",
+    "createdAt": { "$date": "2025-09-17T15:10:00.000Z" },
+    "updatedAt": { "$date": "2025-09-17T15:10:00.000Z" }
+  }
+]
