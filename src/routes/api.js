@@ -1,6 +1,6 @@
 const express = require('express');
 const { createUser, handleLogin, getUser,
-    getAccount, addViewedProductController, toggleFav }
+    getAccount, addViewedProductController, toggleFav, getUserByEmailController }
     = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
@@ -36,4 +36,5 @@ router.get("/get-user", getUser);
 router.get("/account", delay, getAccount);
 router.patch("/users/viewed/:productId", addViewedProductController);
 router.post("/users/fav/:id", toggleFav);
+router.get("/users/:email", getUserByEmailController);
 module.exports = router;

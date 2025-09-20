@@ -1,4 +1,4 @@
-const { createUserService, loginService, getUserService, addViewedProduct ,toggleFavProduct } = require('../services/userService'); require('../services/userService');
+const { createUserService, loginService, getUserByEmailService, addViewedProduct ,toggleFavProduct } = require('../services/userService'); 
 
 const createUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -36,17 +36,39 @@ const addViewedProductController = async (req, res) => {
             res.status(400).json({ error: err.message });
         }
     };
-    const toggleFav = async (req, res) => {
-        try {
-            const { email } = req.body;       // lấy email từ body request
-            const { id: productId } = req.params; // lấy productId từ URL
 
-            const user = await toggleFavProduct(email, productId);
-            res.json(user);
+const toggleFav = async (req, res) => {
+        try {
+            const { email } = req.body;
+              const { id: productId } = req.params; // lấy productId từ URL
+
+            const { user, action } = await toggleFavProduct(email, productId);
+
+            res.json({
+            success: true,
+            action,   // "added" hoặc "removed"
+            favProduct: user.favProduct
+            });
         } catch (err) {
-            res.status(400).json({ error: err.message });
+            res.status(500).json({ error: err.message });
         }
+        };
+
+// Get user by email
+const getUserByEmailController = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const user = await getUserByEmailService(email)
+    console.log("Controller receive:", user)
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+    return res.json(user);
+  } catch (err) {
+    console.error("Error in getUserByEmail:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = { 
     createUser, 
@@ -54,5 +76,6 @@ module.exports = {
     getUser, 
     getAccount ,
     addViewedProductController, 
-    toggleFav
+    toggleFav,
+    getUserByEmailController
 };

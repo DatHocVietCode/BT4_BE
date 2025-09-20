@@ -132,18 +132,38 @@ const toggleFavProduct = async (email, productId) => {
   const user = await User.findOne({ email });
   if (!user) throw new Error("User not found");
 
-  const index = user.favProduct.indexOf(productId);
+  let action; // <- thêm biến lưu trạng thái
 
+  const index = user.favProduct.indexOf(productId);
+    console.log(productId, index)
   if (index === -1) {
     // chưa có thì thêm
     user.favProduct.push(productId);
+    action = "added";
   } else {
     // có rồi thì bỏ
-    user.favProduct.splice(index, 1);
+    user.favProduct.splice(index,1);
+    action = "removed";
   }
 
   await user.save();
-  return user;
+  return { user, action }; // trả thêm action
+};
+const getUserByEmailService = async (email) => {
+  try {
+    // populate để lấy luôn thông tin sản phẩm (name, price, imageUrl...)
+    const user = await User.findOne({ email })
+      .populate("favProduct")
+      .populate("viewedProduct");
+    //console.log(user)
+    if (!user) {
+      return { success: false, message: "User not found" };
+    }
+    return { success: true, user };
+  } catch (error) {
+    console.error("Error fetching user by email:", error);
+    return { success: false, message: "Error fetching user" };
+  }
 };
 
-module.exports = { createUserService, loginService, getUserSevice, addViewedProduct, toggleFavProduct };
+module.exports = { createUserService, loginService, getUserSevice, addViewedProduct, toggleFavProduct, getUserByEmailService };
